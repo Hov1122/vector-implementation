@@ -106,7 +106,7 @@ namespace best_vector {
         T &back() {return (*this)[size() - 1];}
         T &front() {return (*this)[0];}
         
-        T &operator[](size_t i) const;
+        T &operator[](int i) const;
         Vector<T> &operator=(const Vector<T> &v);
         bool operator==(const Vector<T> &v) const;
 	};

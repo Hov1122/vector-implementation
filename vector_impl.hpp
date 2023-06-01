@@ -273,10 +273,13 @@ namespace best_vector
     }  
 
     template <typename T>
-    T &Vector<T>::operator[](size_t i) const
+    T &Vector<T>::operator[](int i) const
     {
-        if (i < size())
-            return d->begin()[i];
+        if ((i >= 0 && abs(i) < size()) || (i < 0 && abs(i) <= size()))
+        {
+            return i >= 0 ? d->begin()[i] : *(d->end() + i);
+        }
+           
         throw std::out_of_range ("Index is out of range");
     }  
 

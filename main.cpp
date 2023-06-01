@@ -4,7 +4,7 @@
 int main() 
 {
     best_vector::Vector<int> v1{7, 4, 5, 6};
-    best_vector::Vector<int> v2{3, 5};
+    // best_vector::Vector<int> v2{3, 5};
     
     int a = 3;
     v1.print();
@@ -34,6 +34,7 @@ int main()
     v1.insert(v1.begin() + 1, 3, 24);
     // v1.insert(v1.begin(), 23);
     // v1.insert(v1.begin(), 23);
+    v1[-2] = 100;
     v1.print();
 
     // std::cout << v1[0] << " " <<  v1[1] << std::endl;

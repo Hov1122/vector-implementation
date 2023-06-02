@@ -1,8 +1,18 @@
 #include <iostream>
 #include "vector.hpp"
 
+// class Example
+// {   
+// public:
+//     int a {};
+//     Example(int b) : a(b) {}
+//     ~Example() {};
+// };
+
 int main() 
 {
+    // best_vector::Vector<Example> v1{Example(2), Example(3)};
+    // std::cout << v1[0].a << std::endl;
     best_vector::Vector<int> v1{7, 4, 5, 6};
     // best_vector::Vector<int> v2{3, 5};
     
@@ -31,11 +41,20 @@ int main()
     v1[0] = 4;
     v1.print();
 
-    v1.insert(v1.begin() + 1, 3, 24);
+    v1.insert(v1.begin() + 1, 24, 3);
     // v1.insert(v1.begin(), 23);
     // v1.insert(v1.begin(), 23);
     v1[-2] = 100;
-    v1.print();
+    v1.resize(24, 4);
+
+    std::cout << v1;
+    std::cout << v1.last_index_of(100) << std::endl;
+    std::cout << v1.contains(4) << std::endl;
+
+    std::cout << v1.any([](int a) {return a < 0;}) << std::endl;
+
+    // v1.fill(10, 2, 4);
+    // std::cout << v1;
 
     // std::cout << v1[0] << " " <<  v1[1] << std::endl;
     // std::cout << v2[0] << " " <<  v2[1] << std::endl;

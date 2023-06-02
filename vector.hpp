@@ -1,7 +1,7 @@
-#include "array.hpp"
+#ifndef vector_hpp
+#define vector_hpp
 
-#ifndef vector_h
-#define vector_h
+#include "array.hpp"
 
 namespace best_vector {
 	
@@ -83,6 +83,7 @@ namespace best_vector {
         Vector(size_t size, T elem);
         Vector(std::initializer_list<T>);
         Vector(const Vector<T> &v);
+        Vector(Vector<T> &&other) noexcept : d(other.d) {other.d = nullptr;}
         ~Vector() {free_data(d);}
 
         size_t size() const {return d->size;} 
@@ -92,16 +93,33 @@ namespace best_vector {
         void erase(size_t pos); 
         iterator erase(iterator pos); 
         iterator erase(iterator pos, size_t count);
-        void erase(size_t pos, size_t count);
+        void erase(size_t pos, size_t count = 1);
         iterator insert(iterator pos, const T val);
-        iterator insert(iterator pos, size_t count, const T val);
-        void fill(iterator beg, iterator end, T elem);
+        iterator insert(iterator pos, const T val, size_t count);
+        void insert(size_t pos, const T val, size_t count = 1);
+        void fill(T elem, iterator beg, iterator end);
+        void fill(T &elem, size_t b = 0, int e = -1);
+        void fill(T &&elem, size_t b = 0, int e = -1);
         void pop_back();
         void push_back(T &elem);
         void push_back(T &&elem);
-        bool empty() const {return d->size == 0;}
+        bool is_empty() const {return d->size == 0;}
         void clear();
         void reserve(size_t cap);
+        void resize(size_t count);
+        void resize(size_t count, const T &val);
+        void shrink_to_fit() {d->capacity = d->size;};
+        void swap(Vector<T> &other) noexcept {swap(d, other.d);}
+        size_t length() {return d->size();}
+        int index_of(const T &elem, size_t from = 0) const;
+        int last_index_of(const T &elem, int from = -1) const;
+        bool contains(const T &elem) const {return index_of(elem) != -1;};
+
+        template<typename Functor>
+        bool any(Functor any_comp);
+
+        template<typename Functor>
+        bool every(Functor every_comp);
 
         T &back() {return (*this)[size() - 1];}
         T &front() {return (*this)[0];}
@@ -109,6 +127,10 @@ namespace best_vector {
         T &operator[](int i) const;
         Vector<T> &operator=(const Vector<T> &v);
         bool operator==(const Vector<T> &v) const;
+        bool operator!=(const Vector<T> &v) const {return !(*this == v);};
+
+        template <typename U>
+        friend std::ostream &operator<<(std::ostream &stream, const Vector<U> &v);
 	};
 	
 }

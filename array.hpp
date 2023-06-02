@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <cstdlib>
+#include <limits>
 
 #ifndef array_h
 #define array_h
@@ -36,6 +37,7 @@ namespace best_vector
         static Array *allocate(size_t capacity) noexcept;
         static void deallocate(Array<T> *data);        
         static unsigned calculate_block_size(size_t &capacity);
+        static unsigned max_size() {return std::numeric_limits<T>::max() / sizeof(T);}
 
         typedef T* iterator;
         

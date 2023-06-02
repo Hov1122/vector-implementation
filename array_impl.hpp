@@ -4,9 +4,19 @@ namespace best_vector
     unsigned Array<T>::calculate_block_size(size_t &capacity)
     {
         unsigned bytes = sizeof(T) * capacity;
+        if (int(bytes) < 0)
+            bytes = unsigned(std::numeric_limits<size_t>::max());
         unsigned more_bytes = nextPowerOfTwo(bytes);
- 
-        bytes += (more_bytes - bytes) / 2;
+        if (int(more_bytes) < 0)
+        {
+            //catches morebytes == 2gb
+            more_bytes = unsigned(std::numeric_limits<size_t>::max());
+            bytes += (more_bytes - bytes) / 2;
+        }
+        else
+        {
+            bytes = more_bytes;
+        }
  
         capacity = bytes / sizeof(T);
         return bytes;
@@ -22,9 +32,11 @@ namespace best_vector
         size_t alloc_size = calculate_block_size(capacity) + offset * sizeof(T);
 
         Array<T> *head = static_cast<Array<T> *>(::malloc(alloc_size));
-
-        head->size = 0;
-        head->allocated_size = capacity;
+        if (head)
+        {
+            head->size = 0;
+            head->allocated_size = capacity;
+        }
         
         return head;
 

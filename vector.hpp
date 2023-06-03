@@ -1,9 +1,49 @@
+/*
+ * Copyright (c) 2023 Hov1122 <<url>>
+ * 
+ * Created Date: Saturday, June 3rd 2023, 10:55:19 am
+ * Author: Hov1122
+ * Last Modified: Saturday, 3rd June 2023 11:58:51 am
+ * Modified By: Hov1122
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS
+ * IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * ----------	---	----------------------------------------------------------
+ */
+
+
 #ifndef vector_hpp
 #define vector_hpp
 
 #include "array.hpp"
 
-namespace best_vector {
+namespace my_vector {
 	
 	template <typename T>
 	class Vector {
@@ -43,8 +83,8 @@ namespace best_vector {
             inline Iterator<Val> &operator--() {--_ptr; return *this;}
             inline Iterator<Val> operator++(int) {Iterator<Val> tmp(*this); ++_ptr; return tmp;}
             inline Iterator<Val> operator--(int) {Iterator<Val> tmp(*this); --_ptr; return tmp;}
-            /* inline Iterator operator+(const Iterator& rhs) {return Iterator(_ptr+rhs.ptr);} */
-            inline difference_type operator-(const Iterator& rhs) const {return _ptr-rhs.ptr;}
+            // inline Iterator operator+(const Iterator& rhs) {return Iterator(_ptr+rhs._ptr);} 
+            inline difference_type operator-(const Iterator& rhs) const {return _ptr-rhs._ptr;}
             inline Iterator<Val> operator+(difference_type rhs) const {return Iterator<Val>(_ptr+rhs);}
             inline Iterator<Val> operator-(difference_type rhs) const {return Iterator<Val>(_ptr-rhs);}
             friend inline Iterator<Val> operator+(difference_type lhs, const Iterator<Val> &rhs) 
@@ -101,8 +141,11 @@ namespace best_vector {
         void fill(T &elem, size_t b = 0, int e = -1);
         void fill(T &&elem, size_t b = 0, int e = -1);
         void pop_back();
+        void pop_front() {erase(0);}
         void push_back(T &elem);
         void push_back(T &&elem);
+        void push_front(T &elem) {insert(begin(), elem);}
+        void push_front(T &&elem) {insert(begin(), elem);}
         bool is_empty() const {return d->size == 0;}
         void clear();
         void reserve(size_t cap);
@@ -114,12 +157,19 @@ namespace best_vector {
         int index_of(const T &elem, size_t from = 0) const;
         int last_index_of(const T &elem, int from = -1) const;
         bool contains(const T &elem) const {return index_of(elem) != -1;};
+        T *data() noexcept {return begin();}
 
         template<typename Functor>
-        bool any(Functor any_comp);
+        bool any(Functor any_comp, size_t from = 0);
 
         template<typename Functor>
-        bool every(Functor every_comp);
+        bool every(Functor every_comp, size_t from = 0);
+
+        template<typename Functor>
+        iterator find(Functor find_comp, size_t from = 0);
+
+        template<typename Functor>
+        int find_index(Functor find_comp, size_t from = 0);
 
         T &back() {return (*this)[size() - 1];}
         T &front() {return (*this)[0];}

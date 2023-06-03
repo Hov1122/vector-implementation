@@ -1,4 +1,10 @@
-namespace best_vector 
+#ifndef array_hpp
+#ifndef __INTELLISENSE__ 
+#error [Error] vector_impl_hpp should only be included from vector.hpp
+#endif
+#endif
+
+namespace my_vector 
 {	
 	template <typename T>
     unsigned Array<T>::calculate_block_size(size_t &capacity)

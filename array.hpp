@@ -2,10 +2,10 @@
 #include <cstdlib>
 #include <limits>
 
-#ifndef array_h
-#define array_h
+#ifndef array_hpp
+#define array_hpp
 
-namespace best_vector 
+namespace my_vector 
 {
     unsigned nextPowerOfTwo(unsigned v)
     {   

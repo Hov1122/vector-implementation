@@ -11,10 +11,10 @@
 
 int main() 
 {
-    // best_vector::Vector<Example> v1{Example(2), Example(3)};
+    // my_vector::Vector<Example> v1{Example(2), Example(3)};
     // std::cout << v1[0].a << std::endl;
-    best_vector::Vector<int> v1{7, 4, 5, 6};
-    // best_vector::Vector<int> v2{3, 5};
+    my_vector::Vector<int> v1{7, 4, 5, 6};
+    // my_vector::Vector<int> v2{3, 5};
     
     int a = 3;
     v1.print();
@@ -30,7 +30,7 @@ int main()
     v1.push_back(b);
     // v1.print();
 
-    best_vector::Vector<int> v2 = v1;
+    my_vector::Vector<int> v2 = v1;
     v1.push_back(14);
     // v2.print();
     // v1.print();
@@ -52,6 +52,7 @@ int main()
     std::cout << v1.contains(4) << std::endl;
 
     std::cout << v1.any([](int a) {return a < 0;}) << std::endl;
+    std::cout << v1.find_index([](int a) {return a == 14;}) << std::endl;
 
     // v1.fill(10, 2, 4);
     // std::cout << v1;
@@ -59,11 +60,11 @@ int main()
     // std::cout << v1[0] << " " <<  v1[1] << std::endl;
     // std::cout << v2[0] << " " <<  v2[1] << std::endl;
 
-    // best_vector::Vector<int> v3(3);
+    // my_vector::Vector<int> v3(3);
     // v3.push_back(5);
     // v3.print();
 
-    // best_vector::Vector<int> v4 = best_vector::Vector<int>(5, 3);
+    // my_vector::Vector<int> v4 = my_vector::Vector<int>(5, 3);
     // v4.print();
 
     // v2.print();

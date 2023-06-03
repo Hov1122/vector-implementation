@@ -2,16 +2,18 @@
 #define vector_impl_hpp
 
 #ifndef vector_hpp
+#ifndef __INTELLISENSE__ 
 #error [Error] vector_impl_hpp should only be included from vector.hpp
+#endif
 #endif
 
 # include <cstring>
 # include "vector.hpp"
 
-namespace best_vector
+namespace my_vector
 {
 
-    // copise memory between src_beg and src_end to dest_end
+    // copies memory between src_beg and src_end to dest_end
     template <typename T>
     void Vector<T>::copy(const T *src_beg, const T *src_end, T *dest_beg) 
     {
@@ -427,9 +429,9 @@ namespace best_vector
     // checks if vector contains any element satisfying to any_comp condition
     template <typename T>
     template <typename Functor>
-    bool Vector<T>::any(Functor any_comp)
+    bool Vector<T>::any(Functor any_comp, size_t from)
     {
-        for (size_t i = 0; i < size(); i++)
+        for (size_t i = from; i < size(); i++)
         {
             if (any_comp((*this)[i]))
                 return true;
@@ -440,14 +442,36 @@ namespace best_vector
     // checks if vectors each element satisfying to any_comp condition
     template <typename T>
     template <typename Functor>
-    bool Vector<T>::every(Functor every_comp)
+    bool Vector<T>::every(Functor every_comp, size_t from)
     {
-        for (size_t i = 0; i < size(); i++)
+        for (size_t i = from; i < size(); i++)
         {
             if (!every_comp((*this)[i]))
                 return false;
         }
         return true;
+    }
+
+    // returns iterator to the first element satisfying to find_comp condition. if not found returns end()
+    template <typename T>
+    template <typename Functor>
+    auto Vector<T>::find(Functor find_comp, size_t from) -> iterator
+    {
+        for (size_t i = from; i < size(); i++)
+        {
+            if (find_comp((*this)[i]))
+                return begin() + i;
+        }
+        return end();
+    }
+
+    // returns index of the first element satisfying to find_comp condition. if not found returns -1
+    template <typename T>
+    template <typename Functor>
+    int Vector<T>::find_index(Functor find_comp, size_t from)
+    {
+        iterator it = find(find_comp, from);
+        return it == end() ? -1 : it - begin();
     }
 
     // prints vector in format  [elem_1, elem_2, ... elem_n]. Type T should implement std::ostream

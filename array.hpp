@@ -7,19 +7,6 @@
 
 namespace my_vector 
 {
-    unsigned nextPowerOfTwo(unsigned v)
-    {   
-        if (v == 0) return 1;
-            
-        v |= v >> 1;
-        v |= v >> 2;
-        v |= v >> 4;
-        v |= v >> 8;
-        v |= v >> 16;
-
-        return ++v; 
-    }
-    
     
     template <typename T>
     class Array
@@ -27,17 +14,20 @@ namespace my_vector
     public:
         std::size_t allocated_size {};
         std::size_t size {};
-        inline static size_t offset = 4; // first 4 bytes are for storing size and allocated_size
+        const static size_t offset = 4; // first 4 bytes are for storing size and allocated_size
 
-        T *data() {
+        T *data() 
+        {
             void *tmp = reinterpret_cast<char *>(this);
             return static_cast<T *>(tmp);
         }
 
-        static Array *allocate(size_t capacity) noexcept;
+        static Array<T> *allocate(size_t capacity) noexcept;
+        static Array<T> *realloc(Array<T> *data, size_t capacity) noexcept;
         static void deallocate(Array<T> *data);        
         static unsigned calculate_block_size(size_t &capacity);
         static unsigned max_size() {return std::numeric_limits<T>::max() / sizeof(T);}
+        static void copy(const T *src_beg, const T *src_end, T *dest_beg);
 
         typedef T* iterator;
         

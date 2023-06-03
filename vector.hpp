@@ -3,7 +3,7 @@
  * 
  * Created Date: Saturday, June 3rd 2023, 10:55:19 am
  * Author: Hov1122
- * Last Modified: Saturday, 3rd June 2023 11:58:51 am
+ * Last Modified: Saturday, 3rd June 2023 1:05:32 pm
  * Modified By: Hov1122
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,10 @@ namespace my_vector {
        	Data *d;
         
         void free_data(Data *);
+        void copy(const T *src_beg, const T *src_end, T *dest_beg);
+        void copy_construct(const T *src_beg, const T *src_end, size_t size);
+        void destruct(T *beg, T *end);
+        void realloc(size_t capacity);
 
     public:
 
@@ -115,9 +119,6 @@ namespace my_vector {
         iterator end() {return iterator(d->end());}      
         const_iterator end() const {return const_iterator(d->end());}      
         const_iterator cend() const {return const_iterator(d->end());}      
-
-        void copy(const T *src_beg, const T *src_end, T *dest_beg) ;
-        void copy_construct(const T *src_beg, const T *src_end, size_t size) ;
     
         Vector(size_t size);
         Vector(size_t size, T elem);

@@ -101,6 +101,30 @@ namespace my_vector
         }
     }
 
+    template <typename T>
+    void Vector<T>::destruct(T *beg, T *end)
+    {
+        T *from = d->begin() - Data::offset;
+        T *to = d->end();
+        
+        if (std::is_trivial<T>::value)
+        {
+            while (from != to)
+                from++->~T();    
+        }    
+    }
+
+    template <typename T>
+    void Vector<T>::realloc(size_t capacity)
+    {
+        Data *new_d = Data::allocate(capacity);
+        copy(d->begin(), d->end(), new_d->begin());
+        size_t s = d->size;
+        free_data(d);
+        d = new_d;
+        d->size = s;
+    }
+
     // creates vector from values of v
     template <typename T>
     Vector<T>::Vector(std::initializer_list<T> v)
@@ -112,14 +136,7 @@ namespace my_vector
     template <typename T>
     void Vector<T>::free_data(Data *d) 
     {
-        T *from = d->begin() - Data::offset;
-        T *to = d->end();
-        
-        if (std::is_trivial<T>::value)
-        {
-            while (from != to)
-                from++->~T();    
-        }    
+        destruct(d->begin(), d->end());
         Data::deallocate(d);
     }
 
@@ -345,12 +362,7 @@ namespace my_vector
         if (cap <= capacity())
             return;
 
-        Data *new_d = Data::allocate(cap);
-        copy(d->begin(), d->end(), new_d->begin());
-        size_t s = d->size;
-        free_data(d);
-        d = new_d;
-        d->size = s;
+        realloc(cap);
     }
 
     // sets vector size to s. Fills with the default value of type T if s >= size()

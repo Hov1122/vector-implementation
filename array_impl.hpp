@@ -1,3 +1,5 @@
+#include "array.hpp"
+# include <cstring>
 #ifndef array_hpp
 #ifndef __INTELLISENSE__ 
 #error [Error] vector_impl_hpp should only be included from vector.hpp
@@ -6,6 +8,19 @@
 
 namespace my_vector 
 {	
+    unsigned nextPowerOfTwo(unsigned v)
+    {   
+        if (v == 0) return 1;
+            
+        v |= v >> 1;
+        v |= v >> 2;
+        v |= v >> 4;
+        v |= v >> 8;
+        v |= v >> 16;
+
+        return ++v; 
+    }
+
 	template <typename T>
     unsigned Array<T>::calculate_block_size(size_t &capacity)
     {
@@ -32,8 +47,6 @@ namespace my_vector
     Array<T> *Array<T>::allocate(size_t capacity) noexcept
     {
         // assumes the array will grow in future
-        
-        // ToDo check for overflow cases
 
         size_t alloc_size = calculate_block_size(capacity) + offset * sizeof(T);
 
@@ -47,11 +60,18 @@ namespace my_vector
         return head;
 
     }
-    
+
+    template <typename T>
+    Array<T> *Array<T>::realloc(Array<T> *d, size_t capacity) noexcept
+    {
+        d = static_cast<Array<T> *>(::realloc(d, calculate_block_size(capacity) + offset * sizeof(T)));
+
+        return d;
+    }
+
     template <typename T>
     void Array<T>::deallocate(Array<T> *data)
     {
         free(data);
     }
-
 }

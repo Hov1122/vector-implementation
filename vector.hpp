@@ -3,7 +3,7 @@
  * 
  * Created Date: Saturday, June 3rd 2023, 10:55:19 am
  * Author: Hov1122
- * Last Modified: Saturday, 3rd June 2023 1:05:32 pm
+ * Last Modified: Sunday, 4th June 2023 1:45:36 pm
  * Modified By: Hov1122
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -131,20 +131,20 @@ namespace my_vector {
         size_t capacity() const {return d->allocated_size;}
         void print() const;
 
-        void erase(size_t pos); 
         iterator erase(iterator pos); 
         iterator erase(iterator pos, size_t count);
         void erase(size_t pos, size_t count = 1);
         iterator insert(iterator pos, const T val);
         iterator insert(iterator pos, const T val, size_t count);
         void insert(size_t pos, const T val, size_t count = 1);
+        void remove(const T &val, bool all = false);
         void fill(T elem, iterator beg, iterator end);
         void fill(T &elem, size_t b = 0, int e = -1);
-        void fill(T &&elem, size_t b = 0, int e = -1);
+        void fill(T &&elem, size_t b = 0, int e = -1) {fill(elem, b, e);}
         void pop_back();
         void pop_front() {erase(0);}
         void push_back(T &elem);
-        void push_back(T &&elem);
+        void push_back(T &&elem) {push_back(elem);}
         void push_front(T &elem) {insert(begin(), elem);}
         void push_front(T &&elem) {insert(begin(), elem);}
         bool is_empty() const {return d->size == 0;}
@@ -154,6 +154,7 @@ namespace my_vector {
         void resize(size_t count, const T &val);
         void shrink_to_fit() {d->capacity = d->size;};
         void swap(Vector<T> &other) noexcept {swap(d, other.d);}
+        void reverse();
         size_t length() {return d->size();}
         int index_of(const T &elem, size_t from = 0) const;
         int last_index_of(const T &elem, int from = -1) const;
@@ -177,8 +178,13 @@ namespace my_vector {
         
         T &operator[](int i) const;
         Vector<T> &operator=(const Vector<T> &v);
+        
         bool operator==(const Vector<T> &v) const;
         bool operator!=(const Vector<T> &v) const {return !(*this == v);};
+        bool operator<(const Vector<T> &v) const;
+        bool operator>(const Vector<T> &v) const {return v < *this;}
+        bool operator<=(const Vector<T> &v) const {return !(v < *this);}
+        bool operator>=(const Vector<T> &v) const {return !(*this < v);}
 
         template <typename U>
         friend std::ostream &operator<<(std::ostream &stream, const Vector<U> &v);

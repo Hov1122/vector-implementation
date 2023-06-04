@@ -1,5 +1,9 @@
+// Example of using my_vector::Vector class
+
+
 #include <iostream>
 #include "vector.hpp"
+#include <algorithm>    // std::sort
 
 // class Example
 // {   
@@ -42,17 +46,25 @@ int main()
     v1.print();
 
     v1.insert(v1.begin() + 1, 24, 3);
-    // v1.insert(v1.begin(), 23);
-    // v1.insert(v1.begin(), 23);
+    v1.insert(v1.begin(), 23);
+    v1.insert(v1.begin(), 23);
     v1[-2] = 100;
     v1.resize(24, 4);
 
     std::cout << v1;
-    std::cout << v1.last_index_of(100) << std::endl;
-    std::cout << v1.contains(4) << std::endl;
+    std::sort(v1.begin(), v1.end());
+    std::cout << v1;
 
-    std::cout << v1.any([](int a) {return a < 0;}) << std::endl;
-    std::cout << v1.find_index([](int a) {return a == 14;}) << std::endl;
+    v1.print();
+
+    // std::cout << v1.last_index_of(100) << std::endl;
+    // std::cout << v1.contains(4) << std::endl;
+
+    // std::cout << v1.any([](int a) {return a < 0;}) << std::endl;
+    // std::cout << v1.find_index([](int a) {return a == 14;}) << std::endl;
+
+    // v1.remove(4, true);
+    // std::cout << v1;
 
     // v1.fill(10, 2, 4);
     // std::cout << v1;

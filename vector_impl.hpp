@@ -70,15 +70,6 @@ namespace my_vector
         fill(elem, begin() + b, begin() + e);
     }
 
-    // fills vector with value of elem starting from index b to e
-    template <typename T>
-    void Vector<T>::fill(T &&elem, size_t b, int e)
-    {
-        if (e < 0) e += size() + 1;
-
-        fill(elem, begin() + b, begin() + e);
-    }
-
     // allocates size bytes. copies memory between src_beg and src_end to the vector's begining. sets vector size to size 
     // if it can't cant allocate enough memory throws error.  
     template <typename T>
@@ -157,7 +148,6 @@ namespace my_vector
     void Vector<T>::push_back(T &elem) 
     {
         reserve(d->size + 1);
-        std::cout << d->size << std::endl;
         if (std::is_trivial<T>::value) 
         {
             d->begin()[d->size++] = elem;
@@ -167,22 +157,6 @@ namespace my_vector
             new (&d->begin()[d->size - 1]) T(elem);
         }
     } 
-
-    // appends element at the back of the vector
-    template <typename T>
-    void Vector<T>::push_back(T &&elem) 
-    {
-        reserve((d->size + 1) * 2);
-        std::cout << d->size << std::endl;
-        if (std::is_trivial<T>::value) 
-        {
-                d->begin()[d->size++] = elem;
-        }
-        else 
-        {
-            new (&d->begin()[d->size - 1]) T(elem);
-        }
-    }
 
     // deletes all elements from vector
     template<typename T>
@@ -198,6 +172,11 @@ namespace my_vector
     template <typename T>
     void Vector<T>::print() const
     {
+        if (size() == 0) {
+            std::cout << "[]" << std::endl;
+            return;
+        }
+
         std::cout << "[";
         for (size_t i = 0; i < size() - 1; i++)
         {
@@ -205,14 +184,6 @@ namespace my_vector
         }
 
         std::cout << (*this)[size() - 1] <<  "]" << std::endl;
-    }
-
-    // deletes element at index pos
-    template <typename T>
-    void Vector<T>::erase(size_t pos)
-    {
-        if (pos >= size()) throw std::out_of_range("Index is out of range");
-        erase(begin() + pos);
     }
 
     // deletes element at pos
@@ -264,10 +235,13 @@ namespace my_vector
     template <typename T>
     auto Vector<T>::insert(iterator pos, const T val) -> iterator
     {
+        typename Iterator<T>::difference_type tmp = pos - begin(); 
         reserve(size() + 1);
+        pos = begin() + tmp;
         
         d->size++;
-        for (iterator start = end() - 1; start != pos - 1; start--)
+        
+        for (iterator start = end() - 1; start > pos - 1; start--)
         {
             *start = *(start - 1);
         }
@@ -288,13 +262,44 @@ namespace my_vector
     template <typename T>
     auto Vector<T>::insert(iterator pos, const T val, size_t count) -> iterator
     {
+        typename Iterator<T>::difference_type tmp = pos - begin();
         reserve(size() + count);
+        pos = begin() + tmp;
         for (size_t i = 0; i < count; i++)
         {
             insert(pos + i, val);
         }
 
         return pos + count - 1;
+    }
+
+    // removes first element equal to val. if all is true removes all elements equal to val
+    template <typename T>
+    void Vector<T>::remove(const T &val, bool all)
+    {
+        size_t count = 0;
+
+        for (size_t i = 0; i < size(); ++i)
+        {
+            if ((*this)[i] != val)
+            {
+                std::swap((*this)[i], (*this)[i - count]);
+            }
+            else
+            {
+                if (!all)
+                {
+                    erase(i);
+                    break;
+                }
+                ++count;
+            }
+        }
+
+        for (size_t i = 0; i < count; ++i)
+        {
+            pop_back();
+        }
     }
 
     // inserts count number of val-s starting from pos
@@ -341,7 +346,20 @@ namespace my_vector
         }
 
         return true;
-    }  
+    }
+
+    // return true if all element in 'this' are less than v's elements
+    template <typename T>
+    bool Vector<T>::operator<(const Vector<T> &v) const
+    {
+        for (size_t i = 0; i < size(); ++i)
+        {
+            if ((*this)[i] >= v[i])
+                return false;
+        }
+
+        return true;
+    }
 
     // returns reference to the i-th element of vector. supports negative indexing
     template <typename T>
@@ -408,6 +426,16 @@ namespace my_vector
                     (*this)[i] = T(val);
             }
         }  
+    }
+
+    // reverses vector
+    template <typename T>
+    void Vector<T>::reverse()
+    {
+        for (size_t i = 0; i < size() / 2; i++)
+        {
+            std::swap((*this)[i], (*this)[size() - i - 1]);
+        }
     }
 
     // returns index of elem if found in vector starting from 'from'. returns -1 if doesn't find.
@@ -490,6 +518,11 @@ namespace my_vector
     template <typename T>
     std::ostream &operator<<(std::ostream &stream, const Vector<T> &v) 
     {
+        if (v.size() == 0) {
+            stream << "[]" << std::endl;
+            return stream;
+        }
+
         stream << "[";
         for (size_t i = 0; i < v.size() - 1; i++)
         {

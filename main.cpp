@@ -57,8 +57,8 @@ int main()
 
     v1.print();
 
-    // std::cout << v1.last_index_of(100) << std::endl;
-    // std::cout << v1.contains(4) << std::endl;
+    std::cout << v1.last_index_of(100) << std::endl;
+    std::cout << v1.contains(4) << std::endl;
 
     // std::cout << v1.any([](int a) {return a < 0;}) << std::endl;
     // std::cout << v1.find_index([](int a) {return a == 14;}) << std::endl;
